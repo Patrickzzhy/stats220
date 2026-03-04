@@ -6,6 +6,6 @@ A little about me:
 
 - I am undertaking a degree in data science
 - I am taking STATS 220 because it is my compulsory course
-- I am interested in learning about the technologies that can deal with data
+- I am interested in learning about the technologies that can deal with the data
 
 A meme that captures how I currently feel about my university studies is ![](https://c.tenor.com/8druEACXtX8AAAAd/tenor.gif)
