@@ -1,0 +1,86 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+
+```
+
+```{r}
+library(tidyverse)
+
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTbuMxGp-qjiN31z4rOl4_1bCwOk4R22lZgqhDt1vuY7TFe44S-2EdEzfdlPe4PvSfgSS3Qi5aoyMCy/pub?output=csv")
+
+latest_data <- logged_data %>%
+  rename(
+    minutes = `How many minutes did you spend on TikTok?`,
+    content = `What type of content did you mostly watch?`,
+    location = `Where were you when using TikTok?`,
+    time_of_day = `What time of day was it?`,
+    reason = `Why did you open TikTok this time?`
+  )
+```
+
+## TikTok usage patterns
+
+This report shows patterns in my TikTok use based on the data I collected.
+
+I recorded `r nrow(latest_data)` observations in total.
+
+The average time spent on TikTok was `r round(mean(latest_data$minutes, na.rm = TRUE), 1)` minutes.
+
+The longest TikTok session was `r max(latest_data$minutes, na.rm = TRUE)` minutes, and the shortest was `r min(latest_data$minutes, na.rm = TRUE)` minutes.
+
+### Most watched TikTok content
+
+```{r}
+ggplot(latest_data, aes(x = content)) +
+  geom_bar() +
+  labs(
+    title = "Most watched TikTok content",
+    x = "Content type",
+    y = "Count"
+  )
+```
+
+### Where TikTok was used
+
+```{r}
+ggplot(latest_data, aes(x = location)) +
+  geom_bar() +
+  labs(
+    title = "Where TikTok was used",
+    x = "Location",
+    y = "Count"
+  )
+```
+
+### Time of day TikTok was used
+
+```{r}
+ggplot(latest_data, aes(x = time_of_day)) +
+  geom_bar() +
+  labs(
+    title = "Time of day TikTok was used",
+    x = "Time of day",
+    y = "Count"
+  )
+```
+
+### Why TikTok was opened
+
+```{r}
+ggplot(latest_data, aes(x = reason)) +
+  geom_bar() +
+  labs(
+    title = "Reasons for opening TikTok",
+    x = "Reason",
+    y = "Count"
+  )
+```
