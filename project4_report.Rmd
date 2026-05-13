@@ -1,18 +1,10 @@
 ---
 title: "Project 4"
 author: "Hongyi Zhu"
-output:
-  html_document:
-    code_folding: hide
+output: html_document
+
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  message = FALSE,
-  warning = FALSE
-)
-```
 ## Introduction
 
 This project investigates my TikTok usage habits over time. 
@@ -48,100 +40,6 @@ In the future, I would like to learn more about interactive visualisations and d
 
 ## Appendix
 
-```{r}
-library(tidyverse)
-library(lubridate)
+```{r file='data_visualisation.R', eval=FALSE, echo=TRUE}
 
-logged_data <- read_csv("tiktok_usage.csv")
-
-
-content_summary <- logged_data %>%
-  count(`What type of content did you mostly watch?`)
-
-content_plot <- ggplot(
-  content_summary,
-  aes(
-    x = `What type of content did you mostly watch?`,
-    y = n
-  )
-) +
-  geom_col(fill = "skyblue") +
-  labs(
-    title = "Most Watched TikTok Content",
-    x = "Content Type",
-    y = "Count"
-  ) +
-  theme_minimal()
-
-
-
-ggsave("content_plot.png")
-
-duration_summary <- logged_data %>%
-  group_by(`What time of day was it?`) %>%
-  summarise(
-    avg_duration =
-      mean(`How many minutes did you spend on TikTok?`)
-  )
-
-duration_plot <- ggplot(
-  duration_summary,
-  aes(
-    x = `What time of day was it?`,
-    y = avg_duration
-  )
-) +
-  geom_col(fill = "orange") +
-  labs(
-    title = "Average TikTok Usage by Time of Day",
-    x = "Time of Day",
-    y = "Average Minutes"
-  ) +
-  theme_minimal()
-
-
-
-ggsave("duration_plot.png")
-
-logged_data <- read_csv("tiktok_usage.csv")
-
-logged_data <- logged_data %>%
-  mutate(
-    Timestamp = parse_date_time(
-      Timestamp,
-      orders = c(
-        "mdy HMS",
-        "mdy HM",
-        "dmy HMS",
-        "dmy HM",
-        "ymd HMS",
-        "ymd HM"
-      )
-    ),
-    hour = hour(Timestamp)
-  )
-
-hour_summary <- logged_data %>%
-  filter(!is.na(hour)) %>%
-  group_by(hour) %>%
-  summarise(
-    count = n()
-  )
-
-hour_plot <- ggplot(
-  hour_summary,
-  aes(x = hour, y = count)
-) +
-  geom_line(linewidth = 1) +
-  geom_point(size = 2) +
-  labs(
-    title = "TikTok Usage Throughout the Day",
-    x = "Hour of Day",
-    y = "Number of Sessions"
-  ) +
-  theme_minimal()
-
-
-
-ggsave("hour_plot.png")
 ```
