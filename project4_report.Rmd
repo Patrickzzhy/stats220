@@ -1,0 +1,147 @@
+---
+title: "Project 4"
+author: "Hongyi Zhu"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+## Introduction
+
+This project investigates my TikTok usage habits over time. 
+I collected data about how long I spent on TikTok, what type of content I watched, what time of day I used TikTok, and why I opened the app.
+
+The data was collected using a Google Form. 
+I continued using the same form from Project 2 because the questions were already useful for tracking my TikTok habits.
+
+Only I collected the data for this project. 
+I recorded around 50 observations over multiple days.
+
+I focused on variables such as content type and time of day because I wanted to understand my TikTok behaviour patterns.
+
+I used bar charts because they clearly compare categories. 
+I also used a line graph to show how TikTok activity changed throughout the day.
+
+At first, I had some problems with timestamps and plotting the hourly data, but I fixed the issue by converting the time format correctly.
+
+## Visual data story
+
+[Click here to view my visual data story](https://patrickzzhy.github.io/stats220/visual_data_story.html)
+
+I believe my visual data story demonstrates creativity because I used multiple visualisations and organised the story using progressive sections. 
+The visualisations help explain patterns in my TikTok usage clearly and simply.
+
+## Learning reflection
+
+One important thing I learned from Module 4 was how visualisations can communicate information more effectively than raw numbers.
+
+I also learned how to use ggplot2 to create different chart types and customise graphs using titles, labels, and themes.
+
+In the future, I would like to learn more about interactive visualisations and dashboard design because they can make data stories more engaging.
+
+## Appendix
+
+```{r}
+library(tidyverse)
+library(lubridate)
+
+logged_data <- read_csv("tiktok_usage.csv")
+
+
+content_summary <- logged_data %>%
+  count(`What type of content did you mostly watch?`)
+
+content_plot <- ggplot(
+  content_summary,
+  aes(
+    x = `What type of content did you mostly watch?`,
+    y = n
+  )
+) +
+  geom_col(fill = "skyblue") +
+  labs(
+    title = "Most Watched TikTok Content",
+    x = "Content Type",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+
+
+ggsave("content_plot.png")
+
+duration_summary <- logged_data %>%
+  group_by(`What time of day was it?`) %>%
+  summarise(
+    avg_duration =
+      mean(`How many minutes did you spend on TikTok?`)
+  )
+
+duration_plot <- ggplot(
+  duration_summary,
+  aes(
+    x = `What time of day was it?`,
+    y = avg_duration
+  )
+) +
+  geom_col(fill = "orange") +
+  labs(
+    title = "Average TikTok Usage by Time of Day",
+    x = "Time of Day",
+    y = "Average Minutes"
+  ) +
+  theme_minimal()
+
+
+
+ggsave("duration_plot.png")
+
+logged_data <- read_csv("tiktok_usage.csv")
+
+logged_data <- logged_data %>%
+  mutate(
+    Timestamp = parse_date_time(
+      Timestamp,
+      orders = c(
+        "mdy HMS",
+        "mdy HM",
+        "dmy HMS",
+        "dmy HM",
+        "ymd HMS",
+        "ymd HM"
+      )
+    ),
+    hour = hour(Timestamp)
+  )
+
+hour_summary <- logged_data %>%
+  filter(!is.na(hour)) %>%
+  group_by(hour) %>%
+  summarise(
+    count = n()
+  )
+
+hour_plot <- ggplot(
+  hour_summary,
+  aes(x = hour, y = count)
+) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  labs(
+    title = "TikTok Usage Throughout the Day",
+    x = "Hour of Day",
+    y = "Number of Sessions"
+  ) +
+  theme_minimal()
+
+
+
+ggsave("hour_plot.png")
+```
